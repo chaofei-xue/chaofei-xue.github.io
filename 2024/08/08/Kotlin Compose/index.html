@@ -1,0 +1,681 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1、声明性编程范式与之前的视图编写方式不同，compose是声明式，而之前是命令式。 2、组合函数使用 Compose，可以通过定义一组接受数据而发出界面元素的可组合函数来构建界面。  关于Compose，有几点注意关注的地方：  此函数带有 @Composable 注释。所有可组合函数都必须带有此注释；此注释可告知 Compose 编译器：此函数旨在将数据转换为界面。 此函数接受数据。可组合函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="👨🏻‍💻Compose编程思想">
+<meta property="og:url" content="http://example.com/2024/08/08/Kotlin%20Compose/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1、声明性编程范式与之前的视图编写方式不同，compose是声明式，而之前是命令式。 2、组合函数使用 Compose，可以通过定义一组接受数据而发出界面元素的可组合函数来构建界面。  关于Compose，有几点注意关注的地方：  此函数带有 @Composable 注释。所有可组合函数都必须带有此注释；此注释可告知 Compose 编译器：此函数旨在将数据转换为界面。 此函数接受数据。可组合函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/compose/compose_1.png">
+<meta property="og:image" content="http://example.com/images/compose/compose_2.png">
+<meta property="og:image" content="http://example.com/images/compose/compose_3.png">
+<meta property="article:published_time" content="2024-08-08T02:52:55.909Z">
+<meta property="article:modified_time" content="2024-08-08T05:48:13.969Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/compose/compose_1.png">
+  
+  
+  
+  <title>👨🏻‍💻Compose编程思想 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="👨🏻‍💻Compose编程思想"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-08 10:52" pubdate>
+          2024年8月8日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">👨🏻‍💻Compose编程思想</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="1、声明性编程范式"><a href="#1、声明性编程范式" class="headerlink" title="1、声明性编程范式"></a>1、声明性编程范式</h3><p>与之前的视图编写方式不同，compose是声明式，而之前是命令式。</p>
+<h3 id="2、组合函数"><a href="#2、组合函数" class="headerlink" title="2、组合函数"></a>2、组合函数</h3><p>使用 Compose，可以通过定义一组接受数据而发出界面元素的可组合函数来构建界面。</p>
+<p><img src="/../images/compose/compose_1.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p>关于Compose，有几点注意关注的地方：</p>
+<ol>
+<li>此函数带有 <code>@Composable</code> 注释。所有可组合函数都必须带有此注释；此注释可告知 Compose 编译器：此函数旨在将数据转换为界面。</li>
+<li>此函数接受数据。可组合函数可以接受一些参数，这些参数可让应用逻辑描述界面。</li>
+<li>此函数可以在界面中显示文本。为此，它会调用 <code>Text()</code> 可组合函数，该函数实际上会创建文本界面元素。可组合函数通过调用其他可组合函数来发出界面层次结构。</li>
+<li>此函数不会返回任何内容。发出界面的 Compose 函数不需要返回任何内容，因为它们描述所需的屏幕状态，而不是构造界面 widget。</li>
+</ol>
+<h3 id="3、声明性范式转变"><a href="#3、声明性范式转变" class="headerlink" title="3、声明性范式转变"></a>3、<strong>声明性范式转变</strong></h3><p>在 Compose 的声明性方法中，widget 相对无状态，并且不提供 setter 或 getter 函数。</p>
+<p><img src="/../images/compose/compose_2.png" srcset="/img/loading.gif" lazyload alt="应用逻辑为顶级可组合函数提供数据。该函数通过调用其他可组合函数来使用这些数据描述界面，将适当的数据传递给这些可组合函数，并沿层次结构向下传递数据。当用户与界面交互时，界面会发起 `onClick` 等事件。这些事件应通知应用逻辑，应用逻辑随后可以改变应用的状态。当状态发生变化时，系统会使用新数据再次调用可组合函数。这会导致重新绘制界面元素，此过程称为“重组”。"></p>
+<p>应用逻辑为顶级可组合函数提供数据。该函数通过调用其他可组合函数来使用这些数据描述界面，将适当的数据传递给这些可组合函数，并沿层次结构向下传递数据。当用户与界面交互时，界面会发起 <code>onClick</code> 等事件。这些事件应通知应用逻辑，应用逻辑随后可以改变应用的状态。当状态发生变化时，系统会使用新数据再次调用可组合函数。这会导致重新绘制界面元素，此过程称为“重组”。</p>
+<p><img src="/../images/compose/compose_3.png" srcset="/img/loading.gif" lazyload alt="用户与界面元素进行了交互，导致触发一个事件。应用逻辑响应该事件，然后系统根据需要使用新参数自动再次调用可组合函数。"></p>
+<p>用户与界面元素进行了交互，导致触发一个事件。应用逻辑响应该事件，然后系统根据需要使用新参数自动再次调用可组合函数。</p>
+<h3 id="4、动态内容"><a href="#4、动态内容" class="headerlink" title="4、动态内容"></a>4、<strong>动态内容</strong></h3><p>由于可组合函数是用 Kotlin 而不是 XML 编写的，因此它们可以像其他任何 Kotlin 代码一样动态。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">Greeting</span><span class="hljs-params">(names: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span> &#123;<br>    <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> names) &#123;<br>        Text(<span class="hljs-string">&quot;Hello <span class="hljs-variable">$name</span>&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可组合函数可能非常复杂。可以使用 <code>if</code> 语句来确定是否要显示特定的界面元素。可以使用循环。可以调用辅助函数。拥有底层语言的全部灵活性。这种强大的功能和灵活性是 Jetpack Compose 的主要优势之一。</p>
+<h3 id="5、重组"><a href="#5、重组" class="headerlink" title="5、重组"></a>5、<strong>重组</strong></h3><p>在命令式界面模型中，如需更改某个 widget，可以在该 widget 上调用 setter 以更改其内部状态。在 Compose 中，可以使用新数据再次调用可组合函数。这样做会导致函数进行重组 – 系统会根据需要使用新数据重新绘制函数发出的 widget。Compose 框架可以智能地仅重组已更改的组件。</p>
+<p>有以下可组合函数，它用于显示一个按钮：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">ClickCounter</span><span class="hljs-params">(clicks: <span class="hljs-type">Int</span>, onClick: () -&gt; <span class="hljs-type">Unit</span>)</span></span> &#123;<br>    Button(onClick = onClick) &#123;<br>        Text(<span class="hljs-string">&quot;I&#x27;ve been clicked <span class="hljs-variable">$clicks</span> times&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>重组是指在输入更改时再次调用可组合函数的过程。</strong></p>
+<p>当函数的输入更改时，会发生这种情况。当 Compose 根据新输入重组时，它仅调用可能已更改的函数或 lambda，而跳过其余函数或 lambda。通过跳过所有未更改参数的函数或 lambda，Compose 可以高效地重组。</p>
+<p>切勿依赖于执行可组合函数所产生的附带效应，因为可能会跳过函数的重组。</p>
+<p>如果这样做，用户可能会在应用中遇到奇怪且不可预测的行为。附带效应是指对应用的其余部分可见的任何更改。例如，以下操作全部都是危险的附带效应：</p>
+<ul>
+<li>写入共享对象的属性</li>
+<li>更新 <code>ViewModel</code> 中的可观察项</li>
+<li>更新共享偏好设置</li>
+</ul>
+<p>可组合函数可能会像每一帧一样频繁地重新执行，例如在呈现动画时。可组合函数应快速执行，以避免在播放动画期间出现卡顿。</p>
+<p><strong>总结一下重组需要的注意事项：</strong></p>
+<ul>
+<li>可组合函数可以按任何顺序执行。</li>
+<li>可组合函数可以并行执行。</li>
+<li>重组会跳过尽可能多的可组合函数和 lambda。</li>
+<li>重组是乐观的操作，可能会被取消。</li>
+<li>可组合函数可能会像动画的每一帧一样非常频繁地运行。</li>
+</ul>
+<h4 id="5-1-可组合函数可以按任何顺序执行"><a href="#5-1-可组合函数可以按任何顺序执行" class="headerlink" title="5.1 可组合函数可以按任何顺序执行"></a>5.1 <strong>可组合函数可以按任何顺序执行</strong></h4><p>假设有如下代码，用于绘制三个View：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">ButtonRow</span><span class="hljs-params">()</span></span> &#123;<br>    MyFancyNavigation &#123;<br>        StartScreen()<br>        MiddleScreen()<br>        EndScreen()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-2-可组合函数可以并行运行"><a href="#5-2-可组合函数可以并行运行" class="headerlink" title="5.2 可组合函数可以并行运行"></a>5.2 <strong>可组合函数可以并行运行</strong></h4><p>Compose 可以通过并行运行可组合函数来优化重组。这样一来，Compose 就可以利用多个核心，并以较低的优先级运行可组合函数（不在屏幕上）。</p>
+<p>这种优化意味着，可组合函数可能会在后台线程池中执行。如果某个可组合函数对 <code>ViewModel</code> 调用一个函数，则 Compose 可能会同时从多个线程调用该函数。</p>
+<p>为了确保应用正常运行，所有可组合函数都不应有附带效应，而应通过始终在界面线程上执行的 <code>onClick</code> 等回调触发附带效应。</p>
+<p>调用某个可组合函数时，调用可能发生在与调用方不同的线程上。这意味着，应避免使用修改可组合 lambda 中的变量的代码，既因为此类代码并非线程安全代码，又因为它是可组合 lambda 不允许的附带效应。</p>
+<p>正确的示例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">ListComposable</span><span class="hljs-params">(myList: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span> &#123;<br>    Row(horizontalArrangement = Arrangement.SpaceBetween) &#123;<br>        Column &#123;<br>            <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> myList) &#123;<br>                Text(<span class="hljs-string">&quot;Item: <span class="hljs-variable">$item</span>&quot;</span>)<br>            &#125;<br>        &#125;<br>        Text(<span class="hljs-string">&quot;Count: <span class="hljs-subst">$&#123;myList.size&#125;</span>&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>错误的示例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-meta">@Deprecated(<span class="hljs-string">&quot;Example with bug&quot;</span>)</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">ListWithBug</span><span class="hljs-params">(myList: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span> &#123;<br>    <span class="hljs-keyword">var</span> items = <span class="hljs-number">0</span><br><br>    Row(horizontalArrangement = Arrangement.SpaceBetween) &#123;<br>        Column &#123;<br>            <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> myList) &#123;<br>                Text(<span class="hljs-string">&quot;Item: <span class="hljs-variable">$item</span>&quot;</span>)<br>                items++ <span class="hljs-comment">// Avoid! Side-effect of the column recomposing.</span><br>            &#125;<br>        &#125;<br>        Text(<span class="hljs-string">&quot;Count: <span class="hljs-variable">$items</span>&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-3-重组会跳过尽可能多的内容"><a href="#5-3-重组会跳过尽可能多的内容" class="headerlink" title="5.3 重组会跳过尽可能多的内容"></a>5.3 <strong>重组会跳过尽可能多的内容</strong></h4><p>如果界面的某些部分无效，Compose 会尽力只重组需要更新的部分。这意味着，它可以跳过某些内容以重新运行单个按钮的可组合项，而不执行界面树中在其上面或下面的任何可组合项。</p>
+<p>每个可组合函数和 lambda 都可以自行重组。</p>
+<p>示例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">NamePicker</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    header: <span class="hljs-type">String</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">    names: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt;,</span></span><br><span class="hljs-params"><span class="hljs-function">    onNameClicked: (<span class="hljs-type">String</span>) -&gt; <span class="hljs-type">Unit</span></span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span> &#123;<br>    Column &#123;<br>        <span class="hljs-comment">// 当header更改时，这将重新组合，但当names更改时，不会重新组合</span><br>        Text(header, style = MaterialTheme.typography.h5)<br>        Divider()<br>        <span class="hljs-comment">// LazyColumn 是 RecyclerView 的 Compose 版本。</span><br>        <span class="hljs-comment">// 传递给 items() 的 lambda 类似于 RecyclerView.ViewHolder。</span><br>        LazyColumn &#123;<br>            items(names) &#123; name -&gt;<br>                <span class="hljs-comment">// 当项目的name更新时，该项目的适配器将重新组合。 </span><br>                                <span class="hljs-comment">// 当header更改时，这不会重新组合</span><br>                NamePickerItem(name, onNameClicked)<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">@Composable</span><br><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">NamePickerItem</span><span class="hljs-params">(name: <span class="hljs-type">String</span>, onClicked: (<span class="hljs-type">String</span>) -&gt; <span class="hljs-type">Unit</span>)</span></span> &#123;<br>    Text(name, Modifier.clickable(onClick = &#123; onClicked(name) &#125;))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>同样，执行所有可组合函数或 lambda 都应该没有附带效应。当您需要执行附带效应时，应通过回调触发。</p>
+<h4 id="5-4-重组是乐观的操作"><a href="#5-4-重组是乐观的操作" class="headerlink" title="5.4 重组是乐观的操作"></a>5.4 <strong>重组是乐观的操作</strong></h4><p>只要 Compose 认为某个可组合项的参数可能已更改，就会开始重组。重组是乐观的操作，也就是说，Compose 预计会在参数再次更改之前完成重组。如果某个参数在重组完成之前发生更改，Compose 可能会取消重组，并使用新参数重新开始。</p>
+<p>取消重组后，Compose 会从重组中舍弃界面树。如有任何附带效应依赖于显示的界面，则即使取消了组合操作，也会应用该附带效应。这可能会导致应用状态不一致。</p>
+<p>确保所有可组合函数和 lambda 都幂等且没有附带效应，以处理乐观的重组。</p>
+<h4 id="5-5-可组合函数可能会非常频繁地运行"><a href="#5-5-可组合函数可能会非常频繁地运行" class="headerlink" title="5.5 可组合函数可能会非常频繁地运行"></a>5.5 <strong>可组合函数可能会非常频繁地运行</strong></h4><p>在某些情况下，可能会针对界面动画的每一帧运行一个可组合函数。如果该函数执行成本高昂的操作（例如从设备存储空间读取数据），可能会导致界面卡顿。</p>
+<p>如果可组合函数需要数据，它应为相应的数据定义参数。然后，您可以将成本高昂的工作移至组成操作线程之外的其他线程，并使用 <code>mutableStateOf</code>  将相应的数据传递给 Compose。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>👨🏻‍💻Compose编程思想</div>
+      <div>http://example.com/2024/08/08/Kotlin Compose/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/08/hello-world/" title="Hello World">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
